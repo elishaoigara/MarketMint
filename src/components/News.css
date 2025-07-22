@@ -1,0 +1,40 @@
+.news-container {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 1rem;
+}
+
+.news-title {
+  margin-bottom: 1rem;
+}
+
+.news-card {
+  display: flex;
+  gap: 1rem;
+  border: 1px solid #ccc;
+  border-radius: 1rem;
+  padding: 1rem;
+  margin-bottom: 1rem;
+  background: #f9f9f9;
+}
+
+.news-image {
+  width: 150px;
+  height: 100px;
+  object-fit: cover;
+  border-radius: 8px;
+}
+
+.news-details {
+  flex: 1;
+}
+
+.news-source {
+  font-size: 0.85rem;
+  color: #666;
+}
+
+.news-desc {
+  font-size: 0.95rem;
+  color: #333;
+}

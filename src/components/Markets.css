@@ -1,0 +1,33 @@
+.market-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+.market-card {
+  background-color: #1e1e1e;
+  padding: 1rem;
+  border-radius: 8px;
+  color: white;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+}
+
+.coin-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.coin-icon {
+  width: 30px;
+  height: 30px;
+}
+
+.price-positive {
+  color: #00d26a;
+}
+
+.price-negative {
+  color: #ff4e4e;
+}
