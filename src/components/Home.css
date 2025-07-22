@@ -1,71 +1,98 @@
-/* src/components/Home.css */
+/* Home.css */
 
 .home-container {
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 3rem 1rem;
-  text-align: center;
-  background: linear-gradient(120deg, #1e1e2f, #2c2c3e);
-  color: #fff;
+  padding: 3rem 1.5rem;
   min-height: 100vh;
+  background-color: #0f172a;
+  color: #fff;
+  text-align: center;
 }
 
 .home-title {
-  font-size: 2.8rem;
+  font-size: 2.5rem;
+  font-weight: bold;
   margin-bottom: 1rem;
 }
 
 .brand {
-  color: #4fd1c5;
+  color: #00c49f;
 }
 
 .home-subtitle {
-  font-size: 1.25rem;
-  margin-bottom: 2rem;
+  font-size: 1.1rem;
   max-width: 600px;
+  margin-bottom: 2rem;
 }
 
 .explore-button {
-  background-color: #4fd1c5;
-  color: #1a1a2e;
-  padding: 0.75rem 1.5rem;
-  border-radius: 0.5rem;
-  font-weight: 600;
-  text-decoration: none;
   display: inline-flex;
   align-items: center;
-  gap: 0.5rem;
-  transition: background 0.3s ease;
+  background-color: #00c49f;
+  color: #000;
+  padding: 0.75rem 1.5rem;
+  font-weight: 600;
+  border-radius: 0.5rem;
+  text-decoration: none;
+  transition: background 0.3s;
 }
 
 .explore-button:hover {
-  background-color: #38b2ac;
+  background-color: #00a884;
+}
+
+.icon {
+  margin-right: 0.5rem;
 }
 
 .features {
   display: flex;
-  gap: 2rem;
   flex-wrap: wrap;
   justify-content: center;
   margin-top: 3rem;
+  gap: 1.5rem;
+  max-width: 1000px;
+  width: 100%;
 }
 
 .feature-card {
-  background-color: #2e2e42;
-  border-radius: 1rem;
+  flex: 1 1 250px;
+  background-color: #1e293b;
   padding: 1.5rem;
-  max-width: 250px;
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  border-radius: 1rem;
+  text-align: center;
+  transition: transform 0.3s ease-in-out;
 }
 
 .feature-card:hover {
   transform: translateY(-5px);
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
 }
 
 .feature-icon {
   font-size: 2rem;
   margin-bottom: 1rem;
-  color: #4fd1c5;
+  color: #00c49f;
+}
+
+@media screen and (max-width: 768px) {
+  .home-title {
+    font-size: 2rem;
+  }
+
+  .home-subtitle {
+    font-size: 1rem;
+    padding: 0 1rem;
+  }
+
+  .features {
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .explore-button {
+    font-size: 1rem;
+    padding: 0.6rem 1.2rem;
+  }
 }

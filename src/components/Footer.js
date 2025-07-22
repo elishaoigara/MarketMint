@@ -13,7 +13,7 @@ function Footer() {
       <Container>
         <Row className="text-center text-md-left align-items-center">
           <Col md={4} className="mb-3 mb-md-0">
-            <h6>&copy; {new Date().getFullYear()} CryptoTracker</h6>
+            <h6>&copy; {new Date().getFullYear()} MarketMint</h6>
             <p className="mb-0">Built by Elisha Oigara</p>
           </Col>
 
