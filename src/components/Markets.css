@@ -1,13 +1,15 @@
 /* Markets.css */
 
+/* Base body styles */
 body {
-  margin: 0;
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   background-color: #0f172a;
+  margin: 0;
+  padding: 0;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   color: #fff;
 }
 
-/* Container for the entire page */
+/* Container for home page */
 .home-container {
   padding: 2rem 1rem;
   display: flex;
@@ -15,45 +17,47 @@ body {
   align-items: center;
 }
 
-/* Title and subtitle styling */
+/* Title styling */
 .home-title {
   font-size: 2.5rem;
   text-align: center;
   margin-bottom: 0.5rem;
+  color: #ffffff;
 }
 
+/* Subtitle styling */
 .home-subtitle {
-  font-size: 1rem;
+  font-size: 1.2rem;
   text-align: center;
   color: #cbd5e1;
-  max-width: 600px;
   margin-bottom: 2rem;
 }
 
-/* Grid of market cards */
+/* Responsive grid for cards */
 .market-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
   gap: 1.5rem;
   width: 100%;
   max-width: 1200px;
+  padding: 0 1rem;
 }
 
-/* Each individual crypto card */
+/* Individual crypto card styles */
 .market-card {
   background-color: #1e293b;
-  border-radius: 1rem;
-  padding: 1.5rem;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  padding: 1.25rem;
+  border-radius: 12px;
   text-align: center;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
   transition: transform 0.2s ease-in-out;
 }
 
 .market-card:hover {
-  transform: translateY(-5px);
+  transform: translateY(-4px);
 }
 
-/* Coin name and image */
+/* Header within card */
 .coin-header {
   display: flex;
   flex-direction: column;
@@ -61,31 +65,53 @@ body {
   margin-bottom: 1rem;
 }
 
+/* Coin image */
 .coin-icon {
   width: 40px;
   height: 40px;
   margin-bottom: 0.5rem;
 }
 
-/* Price change styles */
+/* Price text styling */
 .price-positive {
-  color: #10b981; /* green */
+  color: #10b981;
   font-weight: bold;
 }
 
 .price-negative {
-  color: #ef4444; /* red */
+  color: #ef4444;
   font-weight: bold;
 }
 
-/* Responsive tweaks for small screens */
-@media screen and (max-width: 600px) {
+/* Dropdown styles */
+form select {
+  background-color: #1e293b;
+  color: #fff;
+  border: 1px solid #334155;
+  padding: 0.5rem;
+  border-radius: 6px;
+  margin-bottom: 1rem;
+}
+
+/* Add spacing to card content */
+.market-card h4 {
+  margin: 0.5rem 0;
+  font-size: 1.2rem;
+}
+
+.market-card p {
+  margin: 0.2rem 0;
+  font-size: 1rem;
+}
+
+/* Mobile responsiveness */
+@media (max-width: 768px) {
   .home-title {
-    font-size: 1.8rem;
+    font-size: 2rem;
   }
 
   .home-subtitle {
-    font-size: 0.95rem;
+    font-size: 1rem;
   }
 
   .market-card {
@@ -95,5 +121,13 @@ body {
   .coin-icon {
     width: 32px;
     height: 32px;
+  }
+
+  .market-card h4 {
+    font-size: 1rem;
+  }
+
+  .market-card p {
+    font-size: 0.9rem;
   }
 }
