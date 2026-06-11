@@ -1,5 +1,5 @@
 // src/components/Markets.js
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import axios from 'axios';
 import { Button, Form, Spinner } from 'react-bootstrap';
 import { FaArrowUp, FaArrowDown } from 'react-icons/fa';
@@ -15,15 +15,8 @@ function Markets() {
     return saved ? JSON.parse(saved) : [];
   });
 
-  useEffect(() => {
-    fetchCoins();
-  }, [perPage]);
-
-  useEffect(() => {
-    localStorage.setItem('watchlist', JSON.stringify(watchlist));
-  }, [watchlist]);
-
-  const fetchCoins = async () => {
+  // Wrap fetchCoins in useCallback to stabilize the reference
+  const fetchCoins = useCallback(async () => {
     try {
       setLoading(true);
       const response = await axios.get('https://api.coingecko.com/api/v3/coins/markets', {
@@ -41,7 +34,15 @@ function Markets() {
     } finally {
       setLoading(false);
     }
-  };
+  }, [perPage]); // Add perPage as a dependency since it's used inside
+
+  useEffect(() => {
+    fetchCoins();
+  }, [fetchCoins]); // Now include fetchCoins in the dependency array
+
+  useEffect(() => {
+    localStorage.setItem('watchlist', JSON.stringify(watchlist));
+  }, [watchlist]);
 
   const toggleWatchlist = (coin) => {
     const exists = watchlist.find((item) => item.id === coin.id);
