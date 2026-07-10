@@ -1,45 +1,75 @@
 import React, { useState } from 'react';
 import { NavLink } from 'react-router-dom';
-import { FaHome, FaMoneyBillWave, FaChartLine, FaBars, FaUser, FaNewspaper } from 'react-icons/fa';
+import { FaBars, FaTimes, FaChartLine, FaStar, FaNewspaper, FaInfoCircle } from 'react-icons/fa';
 
 function Sidebar() {
-  const [isOpen, setIsOpen] = useState(true);
+  const [isOpen, setIsOpen] = useState(() => window.innerWidth > 768);
 
-  const toggleSidebar = () => setIsOpen(!isOpen);
+  const toggleSidebar = () => setIsOpen((prev) => !prev);
+
+  const navItems = [
+    { to: '/markets', icon: FaChartLine, label: 'Markets' },
+    { to: '/watchlist', icon: FaStar, label: 'Watchlist' },
+    { to: '/news', icon: FaNewspaper, label: 'News' },
+    { to: '/about', icon: FaInfoCircle, label: 'About' },
+  ];
 
   return (
-    <div
-      className="bg-dark text-white d-flex flex-column p-3"
-      style={{
-        width: isOpen ? '220px' : '60px',
-        transition: 'width 0.3s',
-        minHeight: '100vh',
-      }}
-    >
-      <div className="mb-4" onClick={toggleSidebar} style={{ cursor: 'pointer' }}>
-        <FaBars />
+    <>
+      <button
+        className="btn btn-dark sidebar-toggle d-md-none position-fixed"
+        style={{ top: '70px', left: isOpen ? '220px' : '10px', zIndex: 1050, transition: 'left 0.3s' }}
+        onClick={toggleSidebar}
+        aria-label={isOpen ? 'Close sidebar' : 'Open sidebar'}
+        aria-expanded={isOpen}
+      >
+        {isOpen ? <FaTimes /> : <FaBars />}
+      </button>
+
+      <div
+        className={`sidebar d-flex flex-column p-3 ${isOpen ? 'open' : 'closed'}`}
+        style={{
+          width: isOpen ? '220px' : '0',
+          minWidth: isOpen ? '220px' : '0',
+          overflow: 'hidden',
+          transition: 'width 0.3s, min-width 0.3s',
+          background: '#1e293b',
+          minHeight: '100%',
+        }}
+      >
+        <nav className="d-flex flex-column gap-2 mt-4">
+          {navItems.map((item) => {
+            const Icon = item.icon;
+            return (
+              <NavLink
+                key={item.to}
+                to={item.to}
+                end
+                className={({ isActive }) =>
+                  `d-flex align-items-center gap-2 px-3 py-2 rounded text-decoration-none ${
+                    isActive
+                      ? 'text-white fw-bold'
+                      : 'text-white-50'
+                  }`
+                }
+                style={({ isActive }) => ({
+                  background: isActive ? '#0f9d58' : 'transparent',
+                  transition: 'background 0.2s',
+                })}
+                onClick={() => {
+                  if (window.innerWidth <= 768) {
+                    setIsOpen(false);
+                  }
+                }}
+              >
+                <Icon size={18} />
+                <span>{item.label}</span>
+              </NavLink>
+            );
+          })}
+        </nav>
       </div>
-
-      <NavLink to="/" className="text-white mb-3 text-decoration-none d-flex align-items-center">
-        <FaHome className="me-2" /> {isOpen && 'Home'}
-      </NavLink>
-
-      <NavLink to="/markets" className="text-white mb-3 text-decoration-none d-flex align-items-center">
-        <FaChartLine className="me-2" /> {isOpen && 'Markets'}
-      </NavLink>
-
-      <NavLink to="/watchlist" className="text-white mb-3 text-decoration-none d-flex align-items-center">
-        <FaMoneyBillWave className="me-2" /> {isOpen && 'Watchlist'}
-      </NavLink>
-
-      <NavLink to="/news" className="text-white mb-3 text-decoration-none d-flex align-items-center">
-        <FaNewspaper className="me-2" /> {isOpen && 'News'}
-      </NavLink>
-
-      <NavLink to="/about" className="text-white mb-3 text-decoration-none d-flex align-items-center">
-        <FaUser className="me-2" /> {isOpen && 'About'}
-      </NavLink>
-    </div>
+    </>
   );
 }
 

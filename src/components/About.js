@@ -1,59 +1,64 @@
-// src/components/About.js
-import React from 'react';
-import { Container, Row, Col, Image } from 'react-bootstrap';
-import { FaGithub, FaArrowRight } from 'react-icons/fa';
+import React, { useState } from 'react';
 import profilePic from '../assets/elisha.jpeg';
 
 function About() {
+  const [imgError, setImgError] = useState(false);
+
   return (
-    <section style={{ backgroundColor: '#1e1e2f', padding: '3rem 1rem', color: '#fff' }}>
-      <Container>
-        <Row className="align-items-center mb-5">
-          <Col md={6} className="text-center">
-            <Image
-              src={profilePic}
-              alt="Elisha Oigara"
-              roundedCircle
-              style={{
-                width: 180,
-                height: 180,
-                objectFit: 'cover',
-                marginBottom: '1rem',
-                border: '3px solid #fff',
-              }}
-            />
-            <h2>Elisha Oigara</h2>
-            <p className="text-muted" style={{ color: '#aaa' }}>Software Engineer</p>
-            <div className="d-flex justify-content-center gap-3 mt-3">
-              <a
-                href="https://github.com/elishaoigara"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="btn btn-light"
-              >
-                <FaGithub className="me-2" />
-                GitHub
-              </a>
-              <a
-                href="https://portfolio-site-elisha-oigaras-projects.vercel.app/"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="btn btn-outline-info"
-              >
-                <FaArrowRight className="me-2" />
-                View Portfolio
-              </a>
-            </div>
-          </Col>
-          <Col md={6}>
-            <h4 className="mb-3">🚀 Mission</h4>
-            <p style={{ fontSize: '1.1rem', color: '#ddd' }}>
-              To empower users with accessible, real-time crypto data and web tools that fuel smarter decisions.
-            </p>
-          </Col>
-        </Row>
-      </Container>
-    </section>
+    <div
+      style={{
+        padding: '3rem 1.5rem',
+        textAlign: 'center',
+      }}
+    >
+      <h2>About MarketMint</h2>
+      <p className="text-muted mb-4" style={{ maxWidth: '600px', margin: '0 auto' }}>
+        MarketMint is your real-time cryptocurrency tracker. Stay updated with
+        live prices, market trends, and news – all in one sleek dashboard.
+      </p>
+      <div
+        style={{
+          width: '180px',
+          height: '180px',
+          borderRadius: '50%',
+          overflow: 'hidden',
+          margin: '2rem auto',
+          border: '4px solid #0f9d58',
+        }}
+      >
+        <img
+          src={imgError ? 'https://via.placeholder.com/180/0f9d58/ffffff?text=ME' : profilePic}
+          alt="Elisha Oigara"
+          style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+          onError={() => setImgError(true)}
+        />
+      </div>
+      <h4>Elisha Oigara</h4>
+      <p className="text-muted">Full Stack Developer & Crypto Enthusiast</p>
+      <p style={{ maxWidth: '500px', margin: '0 auto' }}>
+        Passionate about building intuitive tools that make cryptocurrency
+        accessible to everyone. MarketMint combines real-time data with a
+        clean, user-friendly interface.
+      </p>
+      <div className="mt-4">
+        <a
+          href="https://github.com/elishaoigara"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="btn btn-outline-primary me-2"
+        >
+          GitHub
+        </a>
+        <a
+          href="https://linkedin.com/in/elishaoigara"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="btn btn-outline-primary"
+        >
+          LinkedIn
+        </a>
+      </div>
+    </div>
   );
 }
 

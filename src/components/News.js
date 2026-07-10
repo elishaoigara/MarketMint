@@ -1,79 +1,117 @@
-import React, { useEffect, useState } from 'react';
-import axios from 'axios';
-import { Card, Spinner } from 'react-bootstrap';
-import './News.css'; // Import custom styles
-
-function NewsCard({ news }) {
-  return (
-    <div className="col-lg-4 col-md-6 col-sm-12 mb-4">
-      <Card className="h-100 shadow-sm news-card">
-        <Card.Img
-          variant="top"
-          src={news.imageurl || 'https://via.placeholder.com/300x180?text=No+Image'}
-          alt={news.title}
-          className="news-image"
-        />
-        <Card.Body className="d-flex flex-column justify-content-between">
-          <div>
-            <Card.Title>{news.title}</Card.Title>
-            <Card.Text className="news-desc">
-              {news.body.slice(0, 100)}...
-            </Card.Text>
-          </div>
-          <a
-            href={news.url}
-            className="btn btn-primary btn-sm mt-3"
-            target="_blank"
-            rel="noreferrer"
-          >
-            Read More
-          </a>
-        </Card.Body>
-      </Card>
-    </div>
-  );
-}
+import React, { useState, useEffect } from 'react';
+import { Card, Row, Col, Spinner, Alert } from 'react-bootstrap';
+import api from '../services/api';
+import './News.css';
 
 function News() {
-  const [articles, setArticles] = useState([]);
+  const [news, setNews] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
+    const controller = new AbortController();
+    const { signal } = controller;
+
     const fetchNews = async () => {
+      setLoading(true);
+      setError(null);
       try {
-        const res = await axios.get(
-          'https://min-api.cryptocompare.com/data/v2/news/?lang=EN'
-        );
-        setArticles(res.data.Data);
-      } catch (error) {
-        console.error('Failed to fetch news:', error);
+        const res = await api.get('/coins/categories', {
+          signal,
+          params: {
+            order: 'market_cap_desc',
+          },
+        });
+        if (Array.isArray(res.data)) {
+          const mapped = res.data.slice(0, 30).map((item) => ({
+            guid: item.id,
+            url: `https://www.coingecko.com/en/categories/${item.id}`,
+            title: item.name || 'Unknown Category',
+            body: item.content || item.description || 'No description available.',
+            image: item.image || null,
+            category: item.category || 'General',
+          }));
+          setNews(mapped);
+        } else {
+          setNews([]);
+        }
+      } catch (err) {
+        if (err.name === 'CanceledError' || err.name === 'AbortError') return;
+        setError('Failed to fetch news. Please try again later.');
+        console.error('Error fetching news:', err);
       } finally {
         setLoading(false);
       }
     };
 
     fetchNews();
+
+    return () => controller.abort();
   }, []);
 
-  return (
-    <div className="container mt-4 news-container">
-      <h2 className="mb-4 text-center news-title">📰 Latest Crypto News</h2>
+  if (loading) {
+    return (
+      <div className="text-center mt-5">
+        <Spinner animation="border" variant="primary" />
+        <p className="mt-2">Loading news...</p>
+      </div>
+    );
+  }
 
-      {loading ? (
-        <div className="text-center mt-5">
-          <Spinner animation="border" variant="primary" />
-        </div>
-      ) : (
-        <div className="row">
-          {articles.length > 0 ? (
-            articles.map((news) => <NewsCard key={news.id} news={news} />)
-          ) : (
-            <div className="col-12">
-              <p>No crypto news found at the moment.</p>
-            </div>
-          )}
-        </div>
+  return (
+    <div>
+      <h2 className="mb-4">Cryptocurrency News</h2>
+
+      {error && (
+        <Alert variant="warning" dismissible onClose={() => setError(null)}>
+          {error}
+        </Alert>
       )}
+
+      {news.length === 0 && !loading && (
+        <p className="text-center text-muted mt-4">No news articles available at this time.</p>
+      )}
+
+      <Row>
+        {news.map((article) => {
+          const articleKey = article.guid || article.url || Math.random().toString(36).substr(2, 9);
+          const bodyText = article.body
+            ? article.body.slice(0, 120)
+            : 'No description';
+          return (
+            <Col lg={4} md={6} sm={12} key={articleKey} className="mb-4">
+              <Card className="news-card h-100">
+                {article.image && (
+                  <Card.Img
+                    variant="top"
+                    src={article.image}
+                    alt={article.title}
+                    onError={(e) => {
+                      e.target.onerror = null;
+                      e.target.style.display = 'none';
+                    }}
+                  />
+                )}
+                <Card.Body>
+                  <Card.Title className="news-title">{article.title}</Card.Title>
+                  <Card.Text className="news-desc">
+                    {bodyText}
+                    {article.body && article.body.length > 120 ? '...' : ''}
+                  </Card.Text>
+                  <a
+                    href={article.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="btn btn-outline-primary btn-sm"
+                  >
+                    Read More
+                  </a>
+                </Card.Body>
+              </Card>
+            </Col>
+          );
+        })}
+      </Row>
     </div>
   );
 }
