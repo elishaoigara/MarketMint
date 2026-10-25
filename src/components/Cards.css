@@ -1,0 +1,50 @@
+/* Cards.css - shared dark card theme used by Markets and Watchlist.
+   Kept global (imported once in index.js) so the styling applies even when
+   a card is rendered by a lazily-loaded route such as /watchlist. */
+
+.market-card {
+  background: #1e293b;
+  border: 1px solid #334155;
+  border-radius: 12px;
+  /* Bootstrap sets a dark body color on .card, which is unreadable on a dark
+     card. Force light text for the whole card so every child inherits it. */
+  color: #f8fafc;
+  transition: transform 0.2s, box-shadow 0.2s, border-color 0.2s;
+  overflow: hidden;
+}
+
+.market-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.3);
+  border-color: #0f9d58;
+}
+
+.market-card .card-body,
+.market-card h5,
+.market-card strong {
+  color: #f8fafc;
+}
+
+/* Bootstrap's .text-muted is dark grey (unreadable here) - lighten it. */
+.market-card .text-muted {
+  color: #94a3b8 !important;
+}
+
+.market-card .coin-icon {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: #0f172a;
+  padding: 2px;
+  object-fit: contain;
+}
+
+.market-card .price-positive {
+  color: #22c55e !important;
+  font-weight: 600;
+}
+
+.market-card .price-negative {
+  color: #f87171 !important;
+  font-weight: 600;
+}
