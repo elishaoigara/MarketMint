@@ -1,0 +1,366 @@
+/* ==========================================================================
+   animations.css
+   Decorative, CSS-driven motion: ambient orbs, shimmer skeletons, price
+   flashes, the market marquee, scroll progress bar and hover micro-polish.
+   Interactive / layout motion lives in JSX via Framer Motion.
+
+   Everything here is opt-out: the `prefers-reduced-motion` block at the bottom
+   switches all looping decoration off.
+   ========================================================================== */
+
+/* --------------------------------------------------------------- keyframes */
+
+/* Slow multi-stop drift for the ambient orbs. */
+@keyframes mm-orb-drift {
+  0% {
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+  33% {
+    transform: translate3d(6%, -8%, 0) scale(1.12);
+  }
+  66% {
+    transform: translate3d(-7%, 5%, 0) scale(0.94);
+  }
+  100% {
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+}
+
+/* One grid cell of drift per cycle => seamless. */
+@keyframes mm-grid-drift {
+  from {
+    background-position: 0 0;
+  }
+  to {
+    background-position: 48px 48px;
+  }
+}
+
+@keyframes mm-shimmer {
+  from {
+    transform: translateX(-100%);
+  }
+  to {
+    transform: translateX(100%);
+  }
+}
+
+@keyframes mm-marquee {
+  from {
+    transform: translate3d(0, 0, 0);
+  }
+  to {
+    transform: translate3d(-50%, 0, 0);
+  }
+}
+
+@keyframes mm-gradient-pan {
+  from {
+    background-position: 0% 50%;
+  }
+  to {
+    background-position: 200% 50%;
+  }
+}
+
+@keyframes mm-flash-up {
+  0% {
+    background-color: rgba(34, 197, 94, 0);
+    color: #16a34a;
+  }
+  25% {
+    background-color: rgba(34, 197, 94, 0.28);
+    color: #15803d;
+  }
+  100% {
+    background-color: rgba(34, 197, 94, 0);
+  }
+}
+
+@keyframes mm-flash-down {
+  0% {
+    background-color: rgba(248, 113, 113, 0);
+    color: #dc2626;
+  }
+  25% {
+    background-color: rgba(248, 113, 113, 0.28);
+    color: #b91c1c;
+  }
+  100% {
+    background-color: rgba(248, 113, 113, 0);
+  }
+}
+
+@keyframes mm-pulse-ring {
+  0% {
+    box-shadow: 0 0 0 0 rgba(0, 196, 159, 0.45);
+  }
+  70% {
+    box-shadow: 0 0 0 18px rgba(0, 196, 159, 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(0, 196, 159, 0);
+  }
+}
+
+/* ------------------------------------------------------ scroll progress bar */
+
+.mm-scroll-progress {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  transform-origin: 0% 50%;
+  z-index: 1100; /* above the sticky navbar */
+  background: linear-gradient(90deg, #00c49f, #22d3ee 55%, #a78bfa);
+  pointer-events: none;
+}
+
+/* ------------------------------------------------------- ambient background */
+
+.mm-aurora {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.mm-aurora .mm-orb {
+  position: absolute;
+  display: block;
+  border-radius: 50%;
+  filter: blur(70px);
+  will-change: transform;
+  animation: mm-orb-drift 22s ease-in-out infinite;
+}
+
+.mm-aurora--dark .mm-orb {
+  mix-blend-mode: screen;
+}
+
+.mm-aurora .mm-orb--1 {
+  width: 460px;
+  height: 460px;
+  top: -12%;
+  left: -6%;
+  background: radial-gradient(circle, rgba(0, 196, 159, 0.55), rgba(0, 196, 159, 0) 70%);
+}
+
+.mm-aurora .mm-orb--2 {
+  width: 380px;
+  height: 380px;
+  top: 25%;
+  right: -8%;
+  background: radial-gradient(circle, rgba(34, 211, 238, 0.42), rgba(34, 211, 238, 0) 70%);
+  animation-duration: 27s;
+  animation-direction: reverse;
+}
+
+.mm-aurora .mm-orb--3 {
+  width: 520px;
+  height: 520px;
+  bottom: -22%;
+  left: 32%;
+  background: radial-gradient(circle, rgba(167, 139, 250, 0.4), rgba(167, 139, 250, 0) 70%);
+  animation-duration: 34s;
+  animation-delay: -8s;
+}
+
+.mm-aurora .mm-aurora__grid {
+  position: absolute;
+  inset: -48px;
+  background-image:
+    linear-gradient(rgba(148, 163, 184, 0.09) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(148, 163, 184, 0.09) 1px, transparent 1px);
+  background-size: 48px 48px;
+  animation: mm-grid-drift 18s linear infinite;
+  -webkit-mask-image: radial-gradient(circle at 50% 40%, #000 10%, transparent 75%);
+  mask-image: radial-gradient(circle at 50% 40%, #000 10%, transparent 75%);
+}
+
+/* ------------------------------------------------------------- skeletons */
+
+.mm-skeleton-card {
+  background: #1e293b;
+  border: 1px solid #334155;
+  border-radius: 12px;
+  padding: 1rem;
+  overflow: hidden;
+}
+
+.mm-skeleton {
+  position: relative;
+  overflow: hidden;
+  background: #273449;
+  border-radius: 6px;
+}
+
+.mm-skeleton::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  transform: translateX(-100%);
+  background: linear-gradient(
+    90deg,
+    rgba(255, 255, 255, 0) 0%,
+    rgba(255, 255, 255, 0.08) 50%,
+    rgba(255, 255, 255, 0) 100%
+  );
+  animation: mm-shimmer 1.6s ease-in-out infinite;
+}
+
+.mm-skeleton--avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  margin-right: 0.75rem;
+  flex: 0 0 auto;
+}
+
+.mm-skeleton--title {
+  width: 55%;
+  height: 14px;
+  margin-bottom: 8px;
+}
+
+.mm-skeleton--subtitle {
+  width: 30%;
+  height: 10px;
+}
+
+.mm-skeleton--label {
+  width: 35%;
+  height: 12px;
+}
+
+.mm-skeleton--value {
+  width: 25%;
+  height: 12px;
+}
+
+/* --------------------------------------------------------- price flashes */
+
+.mm-flash-up,
+.mm-flash-down {
+  border-radius: 4px;
+  padding: 0 4px;
+  margin: 0 -4px;
+}
+
+.mm-flash-up {
+  animation: mm-flash-up 0.9s ease-out;
+}
+
+.mm-flash-down {
+  animation: mm-flash-down 0.9s ease-out;
+}
+
+/* ------------------------------------------------------------- ticker */
+
+.mm-ticker {
+  position: relative;
+  width: 100%;
+  overflow: hidden;
+  padding: 0.6rem 0;
+  border-top: 1px solid rgba(148, 163, 184, 0.16);
+  border-bottom: 1px solid rgba(148, 163, 184, 0.16);
+  -webkit-mask-image: linear-gradient(90deg, transparent, #000 6%, #000 94%, transparent);
+  mask-image: linear-gradient(90deg, transparent, #000 6%, #000 94%, transparent);
+}
+
+.mm-ticker__track {
+  display: flex;
+  align-items: center;
+  gap: 2.25rem;
+  width: max-content;
+  animation: mm-marquee 45s linear infinite;
+  will-change: transform;
+}
+
+.mm-ticker:hover .mm-ticker__track {
+  animation-play-state: paused;
+}
+
+.mm-ticker__item {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.9rem;
+  color: #e2e8f0;
+  white-space: nowrap;
+}
+
+.mm-ticker__item img {
+  border-radius: 50%;
+}
+
+.mm-ticker__symbol {
+  font-weight: 700;
+  letter-spacing: 0.02em;
+}
+
+.mm-ticker__price {
+  color: #cbd5e1;
+}
+
+.mm-ticker__change.mm-up {
+  color: #22c55e;
+  font-weight: 600;
+}
+
+.mm-ticker__change.mm-down {
+  color: #f87171;
+  font-weight: 600;
+}
+
+/* ------------------------------------------------- navbar link underline */
+
+.mm-nav-item {
+  position: relative;
+}
+
+.mm-nav-underline {
+  position: absolute;
+  left: 0.5rem;
+  right: 0.5rem;
+  bottom: 0.15rem;
+  height: 2px;
+  border-radius: 2px;
+  background: linear-gradient(90deg, #00c49f, #22d3ee);
+}
+
+/* ------------------------------------------------- pulsing hero button */
+
+.mm-pulse {
+  animation: mm-pulse-ring 2.6s ease-out infinite;
+}
+
+/* --------------------------------------------- animated gradient headline */
+
+.home-title .brand {
+  background-image: linear-gradient(90deg, #00c49f, #22d3ee, #a78bfa, #00c49f);
+  background-size: 200% 100%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  animation: mm-gradient-pan 9s linear infinite;
+}
+
+/* --------------------------------------------------------- reduced motion */
+
+@media (prefers-reduced-motion: reduce) {
+  .mm-aurora .mm-orb,
+  .mm-aurora .mm-aurora__grid,
+  .mm-ticker__track,
+  .mm-skeleton::after,
+  .home-title .brand,
+  .mm-pulse {
+    animation: none !important;
+  }
+
+  .mm-ticker__track {
+    transform: none !important;
+  }
+}

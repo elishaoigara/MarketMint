@@ -14,8 +14,9 @@
 }
 
 .market-card:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.3);
+  /* Note: the lift itself is animated by Framer Motion on the grid item, so
+     this rule only changes the shadow/border to avoid a double transform. */
+  box-shadow: 0 16px 30px rgba(0, 0, 0, 0.38);
   border-color: #0f9d58;
 }
 

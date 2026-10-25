@@ -1,12 +1,17 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { Card, Row, Col, Spinner, Alert, Button } from 'react-bootstrap';
+import { Card, Spinner, Alert, Button } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
+import { AnimatePresence, motion } from 'framer-motion';
 import { FaTrash, FaStar, FaCoins } from 'react-icons/fa';
 import { getSimplePrice } from '../services/api';
+import AnimatedNumber from '../animations/AnimatedNumber';
+import { cardItem, SPRING_POP, fadeUp, EASE_OUT } from '../animations/variants';
 
-const safeFormat = (n) => {
-  if (n === null || n === undefined || isNaN(n)) return 'N/A';
-  return Number(n).toLocaleString();
+const formatPriceValue = (v) => {
+  const n = Number(v);
+  if (n >= 1) return n.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+  if (n >= 0.01) return n.toLocaleString(undefined, { maximumFractionDigits: 4 });
+  return n.toPrecision(4);
 };
 
 const getWatchlistFromStorage = () => {
@@ -83,83 +88,163 @@ function Watchlist() {
 
   if (watchlist.length === 0) {
     return (
-      <div className="text-center mt-5">
-        <FaStar size={48} className="text-warning mb-3" />
+      <motion.div
+        className="text-center mt-5"
+        initial={{ opacity: 0, y: 24, scale: 0.97 }}
+        animate={{ opacity: 1, y: 0, scale: 1 }}
+        transition={{ duration: 0.5, ease: EASE_OUT }}
+      >
+        <motion.div
+          animate={{ y: [0, -10, 0], rotate: [0, -8, 8, 0] }}
+          transition={{ duration: 4.5, repeat: Infinity, ease: 'easeInOut' }}
+        >
+          <FaStar size={48} className="text-warning mb-3" />
+        </motion.div>
         <h3>Your Watchlist is Empty</h3>
         <p className="text-muted mb-4">
           Start adding cryptocurrencies to your watchlist to track them here.
         </p>
-        <Button as={Link} to="/markets" variant="primary">
-          <FaCoins className="me-2" />
-          Browse Markets
-        </Button>
-      </div>
+        <motion.span
+          className="d-inline-block"
+          whileHover={{ scale: 1.05 }}
+          whileTap={{ scale: 0.95 }}
+          transition={SPRING_POP}
+        >
+          <Button as={Link} to="/markets" variant="primary" role="link">
+            <FaCoins className="me-2" />
+            Browse Markets
+          </Button>
+        </motion.span>
+      </motion.div>
     );
   }
 
   return (
     <div>
-      <div className="d-flex justify-content-between align-items-center mb-4">
+      <motion.div
+        className="d-flex justify-content-between align-items-center mb-4"
+        variants={fadeUp}
+        initial="hidden"
+        animate="show"
+      >
         <h2 className="mb-0">
-          <FaStar className="text-warning me-2" />
+          <motion.span
+            className="text-warning me-2 d-inline-flex"
+            animate={{ scale: [1, 1.12, 1] }}
+            transition={{ duration: 2.6, repeat: Infinity, ease: 'easeInOut' }}
+          >
+            <FaStar />
+          </motion.span>
           My Watchlist
         </h2>
-        {loadingPrices && <Spinner animation="border" size="sm" variant="primary" />}
-      </div>
+        <AnimatePresence>
+          {loadingPrices && (
+            <motion.span
+              key="watchlist-spinner"
+              initial={{ opacity: 0, scale: 0.6 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 0.6 }}
+              transition={{ duration: 0.2 }}
+            >
+              <Spinner animation="border" size="sm" variant="primary" />
+            </motion.span>
+          )}
+        </AnimatePresence>
+      </motion.div>
 
-      {priceError && (
-        <Alert variant="warning" dismissible onClose={() => setPriceError(null)}>
-          {priceError}
-        </Alert>
-      )}
+      <AnimatePresence initial={false}>
+        {priceError && (
+          <motion.div
+            key="watchlist-error"
+            initial={{ opacity: 0, height: 0, marginBottom: 0 }}
+            animate={{ opacity: 1, height: 'auto', marginBottom: 16 }}
+            exit={{ opacity: 0, height: 0, marginBottom: 0 }}
+            transition={{ duration: 0.28, ease: EASE_OUT }}
+            style={{ overflow: 'hidden' }}
+          >
+            <Alert variant="warning" dismissible onClose={() => setPriceError(null)}>
+              {priceError}
+            </Alert>
+          </motion.div>
+        )}
+      </AnimatePresence>
 
-      <Row>
-        {watchlist.map((coin) => {
-          if (!coin || !coin.id) return null;
-          const coinPrice = prices[coin.id];
-          const price = coinPrice?.usd;
-          const change24h = coinPrice?.usd_24h_change;
+      <motion.div className="row" layout>
+        <AnimatePresence mode="popLayout">
+          {watchlist.map((coin, index) => {
+            if (!coin || !coin.id) return null;
+            const coinPrice = prices[coin.id];
+            const price = coinPrice?.usd;
+            const change24h = coinPrice?.usd_24h_change;
 
-          return (
-            <Col lg={4} md={6} sm={12} key={coin.id} className="mb-4">
-              <Card className="market-card h-100">
-                <Card.Body>
-                  <div className="d-flex align-items-center mb-3">
-                    <div className="flex-grow-1">
-                      <h5 className="mb-0">{coin.name || coin.id}</h5>
-                      <small className="text-muted">
-                        {coin.symbol ? coin.symbol.toUpperCase() : coin.id.toUpperCase()}
-                      </small>
-                    </div>
-                    <Button
-                      variant="outline-danger"
-                      size="sm"
-                      onClick={() => removeFromWatchlist(coin.id)}
-                      aria-label={`Remove ${coin.name || coin.id} from watchlist`}
-                    >
-                      <FaTrash />
-                    </Button>
-                  </div>
-                  <div className="d-flex justify-content-between mb-2">
-                    <span className="text-muted">Price</span>
-                    <strong>${safeFormat(price)}</strong>
-                  </div>
-                  {change24h !== undefined && change24h !== null && (
-                    <div className="d-flex justify-content-between">
-                      <span className="text-muted">24h Change</span>
-                      <strong
-                        className={change24h >= 0 ? 'price-positive' : 'price-negative'}
+            return (
+              <motion.div
+                className="col-12 col-md-6 col-lg-4 mb-4"
+                key={coin.id}
+                layout
+                variants={cardItem(index, 0.06)}
+                initial="initial"
+                animate="animate"
+                exit="exit"
+                whileHover={{ y: -8 }}
+                transition={{ layout: { duration: 0.32, ease: EASE_OUT } }}
+              >
+                <Card className="market-card h-100">
+                  <Card.Body>
+                    <div className="d-flex align-items-center mb-3">
+                      <div className="flex-grow-1">
+                        <h5 className="mb-0">{coin.name || coin.id}</h5>
+                        <small className="text-muted">
+                          {coin.symbol ? coin.symbol.toUpperCase() : coin.id.toUpperCase()}
+                        </small>
+                      </div>
+                      <motion.div
+                        whileHover={{ scale: 1.12, rotate: -8 }}
+                        whileTap={{ scale: 0.85 }}
+                        transition={SPRING_POP}
+                        className="d-inline-flex"
                       >
-                        {Number(change24h).toFixed(2)}%
+                        <Button
+                          variant="outline-danger"
+                          size="sm"
+                          onClick={() => removeFromWatchlist(coin.id)}
+                          aria-label={`Remove ${coin.name || coin.id} from watchlist`}
+                        >
+                          <FaTrash />
+                        </Button>
+                      </motion.div>
+                    </div>
+                    <div className="d-flex justify-content-between mb-2">
+                      <span className="text-muted">Price</span>
+                      <strong>
+                        {/* Flashes green/red whenever the 30s refresh moves it. */}
+                        <AnimatedNumber
+                          value={price}
+                          prefix="$"
+                          format={formatPriceValue}
+                          flash
+                        />
                       </strong>
                     </div>
-                  )}
-                </Card.Body>
-              </Card>
-            </Col>
-          );
-        })}
-      </Row>
+                    {change24h !== undefined && change24h !== null && (
+                      <div className="d-flex justify-content-between">
+                        <span className="text-muted">24h Change</span>
+                        <strong className={change24h >= 0 ? 'price-positive' : 'price-negative'}>
+                          <AnimatedNumber
+                            value={change24h}
+                            suffix="%"
+                            format={(v) => Number(v).toFixed(2)}
+                          />
+                        </strong>
+                      </div>
+                    )}
+                  </Card.Body>
+                </Card>
+              </motion.div>
+            );
+          })}
+        </AnimatePresence>
+      </motion.div>
     </div>
   );
 }

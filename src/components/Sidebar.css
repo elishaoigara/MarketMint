@@ -1,0 +1,29 @@
+/* Sidebar.css */
+
+.sidebar-toggle {
+  position: fixed;
+  top: 70px;
+  left: 10px;
+  z-index: 1050;
+}
+
+.mm-sidebar-link {
+  position: relative;
+  overflow: hidden;
+}
+
+.mm-sidebar-pill {
+  position: absolute;
+  inset: 0;
+  border-radius: 0.35rem;
+  background: linear-gradient(90deg, #0f9d58, #00c49f);
+  z-index: 0;
+}
+
+.mm-sidebar-content {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}

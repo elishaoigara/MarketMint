@@ -1,0 +1,61 @@
+/* About.css */
+
+.about-container {
+  padding: 3rem 1.5rem;
+  text-align: center;
+}
+
+.about-lead {
+  max-width: 600px;
+  margin: 0 auto 1.5rem;
+}
+
+.about-bio {
+  max-width: 500px;
+  margin: 0 auto;
+}
+
+.about-avatar-wrap {
+  position: relative;
+  width: 196px;
+  height: 196px;
+  margin: 2rem auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Slowly rotating conic ring behind the portrait. */
+.about-avatar-ring {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  background: conic-gradient(from 0deg, #0f9d58, #22d3ee, #a78bfa, #0f9d58);
+  -webkit-mask: radial-gradient(circle, transparent 62%, #000 64%);
+  mask: radial-gradient(circle, transparent 62%, #000 64%);
+  will-change: transform;
+}
+
+.about-avatar {
+  position: relative;
+  width: 180px;
+  height: 180px;
+  border-radius: 50%;
+  overflow: hidden;
+  border: 4px solid #0f9d58;
+  background: #0f172a;
+  will-change: transform;
+}
+
+.about-avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .about-avatar-ring {
+    animation: none;
+  }
+}

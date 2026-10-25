@@ -7,9 +7,13 @@
   overflow: hidden;
 }
 
+.news-card {
+  will-change: transform;
+}
+
+/* Lift is animated by Framer Motion; keep the shadow/border transition here. */
 .news-card:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.3);
+  box-shadow: 0 16px 30px rgba(0, 0, 0, 0.38);
   border-color: #0f9d58;
 }
 
@@ -41,4 +45,12 @@
   background: #0f9d58;
   color: #fff;
   border-color: #0f9d58;
+}
+
+.news-card__media {
+  overflow: hidden;
+}
+
+.news-card__media .card-img-top {
+  will-change: transform;
 }

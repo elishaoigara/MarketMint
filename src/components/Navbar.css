@@ -14,3 +14,29 @@
 .nav-link:hover {
   color: #0f9d58 !important;
 }
+
+/* Slimmer, frosted bar once the page has scrolled. */
+.mm-navbar {
+  transition: padding 0.3s ease, background-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.mm-navbar--scrolled {
+  padding-top: 0.2rem;
+  padding-bottom: 0.2rem;
+  background-color: rgba(24, 30, 38, 0.92) !important;
+  backdrop-filter: blur(10px);
+  box-shadow: 0 8px 22px rgba(2, 6, 23, 0.45);
+}
+
+.mm-brand-text {
+  display: inline-block;
+  transition: color 0.2s ease-in-out;
+}
+
+.navbar-brand:hover .mm-brand-text {
+  color: #00c49f;
+}
+
+.mm-nav-label {
+  display: inline-block;
+}

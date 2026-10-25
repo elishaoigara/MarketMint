@@ -5,6 +5,28 @@ MarketMint is a web application that provides real-time cryptocurrency prices an
 * Real-time cryptocurrency prices
 * Watchlist management
 * User-friendly interface
+* Motion-first UI: animated page transitions, scroll reveals, live price counters and a
+  continuously scrolling market ticker
+
+## Animations
+All motion lives in two places:
+
+* `src/animations/` – shared Framer Motion building blocks:
+  * `variants.js` – easings, springs and reusable variants (page transitions, staggered
+    reveals, card entrance, hover lift).
+  * `Reveal.jsx` – `Reveal`, `RevealGroup` and `RevealItem` for scroll-triggered reveals.
+  * `AnimatedNumber.jsx` – tweens from the old value to the new one (and flashes green/red
+    when a price moves). It writes straight to the DOM through a ref, so a grid of 50
+    prices doesn't re-render on every frame.
+  * `Skeletons.jsx` – shimmering placeholders instead of a bare spinner.
+  * `AmbientBackground.jsx`, `PageTransition.jsx`, `ScrollProgress.jsx`.
+  * `animations.css` – decorative CSS keyframes (drifting orbs, shimmer, marquee, price flash).
+* Component-level polish – animated navbar underline, sliding sidebar pill, card lifts,
+  spring buttons and staggered grids.
+
+Accessibility: the app is wrapped in `<MotionConfig reducedMotion="user" />` and the CSS
+keyframes are disabled under `prefers-reduced-motion: reduce`, so every animation is
+skipped for visitors who ask for less motion.
 
 ## Getting Started
 1. Clone the repository: `git clone https://github.com/elishaoigara/marketmint.git`
