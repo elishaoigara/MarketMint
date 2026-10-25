@@ -1,4 +1,4 @@
-/* Markets.css - scoped to .markets-container only */
+/* Markets.css - layout only. Shared card styling lives in Cards.css. */
 .markets-container {
   padding: 20px 0;
 }
@@ -8,45 +8,6 @@
   grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
   gap: 20px;
   margin-top: 20px;
-}
-
-.markets-container .market-card {
-  background: #1e293b;
-  border: 1px solid #334155;
-  border-radius: 12px;
-  transition: transform 0.2s, box-shadow 0.2s, border-color 0.2s;
-  overflow: hidden;
-}
-
-.markets-container .market-card:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.3);
-  border-color: #0f9d58;
-}
-
-.markets-container .coin-header {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  margin-bottom: 15px;
-}
-
-.markets-container .coin-icon {
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
-  background: #0f172a;
-  padding: 2px;
-}
-
-.markets-container .price-positive {
-  color: #0f9d58;
-  font-weight: 600;
-}
-
-.markets-container .price-negative {
-  color: #dc3545;
-  font-weight: 600;
 }
 
 .markets-container .coin-symbol {
